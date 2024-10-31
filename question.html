@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>謎の団体からの挑戦状</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: white;
+            margin: 50px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-family: serif;
+            color: #fff;
+        }
+        input[type="text"] {
+            padding: 30px;
+            width: 90%;
+            margin: 20px 0;
+            font-size: 32px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 50px;
+            background-color: #f9fbf9;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #fcfcfc;
+        }
+        .message {
+            margin-top: 30px;
+            font-size: 50px;
+            color: rgb(255, 255, 255);
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .image-container img {
+            width: 500px;
+            height: 500px;
+            border-radius: 10px;
+        }
+        
+        /* 右上にアイコンを円形で表示し、スクロールしても固定 */
+        .icon-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 1000; /* アイコンを前面に表示 */
+        }
+
+        .icon-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%; /* 円形にする */
+            transition: transform 0.3s ease; /* 拡大時のアニメーション */
+        }
+
+        /* アイコンが拡大されたときのスタイル */
+        .icon-container.expanded img {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px; /* 拡大後の幅 */
+            height: 300px; /* 拡大後の高さ */
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            border-radius: 50%; /* 拡大しても円形を保持 */
+        }
+
+        /* 背景の暗いオーバーレイ */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* 初期状態は非表示 */
+            z-index: 999; /* オーバーレイを前面に */
+        }
+
+        .overlay.show {
+            display: block; /* アイコンをクリックしたら表示 */
+        }
+
+        /* ヒントボックス */
+        .hint-box {
+            width: 300px;
+            margin: 20px auto;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #5e5d5d; /* 背景色を暗めのグレーに */
+            color: white; /* 文字色を白に */
+            cursor: pointer;
+            text-align: left;
+            box-shadow: 2px 2px 10px rgba(172, 157, 157, 0.2); /* ぼんやりしたボックスの影 */
+        }
+
+        /* ヒント一覧のコンテナ */
+        .hint-list {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease; /* ゆっくり表示・非表示 */
+        }
+
+        /* ヒントの詳細 */
+        .hint-detail {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease;
+            padding-left: 20px;
+        }
+
+        /* ヒントを表示するときのクラス */
+        .show {
+            max-height: 500px; /* 十分大きくしておくことで中身が表示される */
+        }
+
+        .hint-title {
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .hint-detail-content {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+        .show {
+            max-height: 2000px; /* 十分大きくしておくことで中身が表示される */
+        }
+    </style>
+</head>
+<body>
+    <!-- 右上の拡大可能なアイコン（円形） -->
+    <div class="icon-container" id="iconContainer">
+        <img src="png 2.jpg" alt="アイコン">
+    </div>
+
+    <!-- 拡大時の背景のオーバーレイ -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <h1>？？？からの挑戦状</h1>
+        <p>以下の謎を解け</p>
+        <div class="image-container">
+            <img src="1.png" alt="画像1">
+            <img src="スクリーンショット 2024-10-01 16.04.14.png" alt="画像2">
+        </div>
+        <input type="text" id="answer" placeholder="解答を入力">
+        <button onclick="checkAnswer()">解答</button>
+        <p id="message" class="message"></p>
+    </div>
+
+    <!-- ヒント表示部分 -->
+    <div class="hint-box" id="mainHint">
+        <div class="hint-title">　　　　　　＜ヒント＞</div>
+    </div>
+
+    <!-- ヒント一覧 -->
+    <div class="hint-list" id="hintList">
+        <div class="hint-box" id="hint1">ヒント1</div>
+        <div class="hint-detail" id="detail1">
+            <div class="hint-detail-content">数字に対応する文字を当てはめよう。どこかで足跡を見なかった？</div>
+        </div>
+        <div class="hint-box" id="hint2">ヒント2</div>
+        <div class="hint-detail" id="detail2">
+            <div class="hint-detail-content">「5」がない？本当に5か、よく観察してみよう。</div>
+        </div>
+        <div class="hint-box" id="hint3">ヒント3</div>
+        <div class="hint-detail" id="detail3">
+            <div class="hint-detail-content">2つ目の丸の中に4が上下に置かれてる？対応する文字を実際に置いてみよう。</div>
+        </div>
+        <div class="hint-box" id="hint4">ヒント4</div>
+        <div class="hint-detail" id="detail4">
+            <div class="hint-detail-content">2の横にある矢印は、1文字ずらすことを表している。</div>
+        </div>
+        <div class="hint-box" id="hint5">ヒント5</div>
+        <div class="hint-detail" id="detail5">
+            <div class="hint-detail-content">アイコンをよく見ると、虫眼鏡は小さいものを大きくする効果がある。</div>
+        </div>
+    </div>
+
+    <script>
+        // アイコン拡大・縮小の処理
+        const iconContainer = document.getElementById('iconContainer');
+        const overlay = document.getElementById('overlay');
+
+        // アイコンをクリックしたときの処理
+        iconContainer.addEventListener('click', () => {
+            iconContainer.classList.toggle('expanded'); // 拡大・縮小の切り替え
+            overlay.classList.toggle('show'); // 背景オーバーレイの表示・非表示の切り替え
+        });
+
+        // オーバーレイをクリックすると、アイコンを縮小
+        overlay.addEventListener('click', () => {
+            iconContainer.classList.remove('expanded');
+            overlay.classList.remove('show');
+        });
+
+        // 解答チェックの処理
+        function checkAnswer() {
+            const answer = document.getElementById('answer').value;
+            const message = document.getElementById('message');
+            
+            if (answer === 'SOLVE') {
+                // 正解の場合、別のページにリダイレクト
+                window.location.href = 'success.html';
+            } else {
+                // 不正解の場合、メッセージを表示
+                message.textContent = '不正解です';
+            }
+        }
+
+        // メインのヒント表示・非表示
+        const mainHint = document.getElementById('mainHint');
+        const hintList = document.getElementById('hintList');
+        
+        mainHint.addEventListener('click', () => {
+            hintList.classList.toggle('show'); // ヒント一覧の表示・非表示を切り替える
+        });
+
+        // 各ヒントの詳細を表示・非表示
+        const hints = [
+            { button: 'hint1', detail: 'detail1' },
+            { button: 'hint2', detail: 'detail2' },
+            { button: 'hint3', detail: 'detail3' },
+            { button: 'hint4', detail: 'detail4' },
+            { button: 'hint5', detail: 'detail5' },
+        ];
+
+        hints.forEach(hint => {
+            const hintButton = document.getElementById(hint.button);
+            const hintDetail = document.getElementById(hint.detail);
+
+            hintButton.addEventListener('click', () => {
+                hintDetail.classList.toggle('show'); // ヒントの詳細を表示・非表示
+            });
+        });
+    </script>
+
+</body>
+</html>

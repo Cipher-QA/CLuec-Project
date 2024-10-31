@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLuec</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            color: white;
+            margin: 50px;
+            opacity: 0; 
+            animation: fadeIn 2s ease-in forwards; 
+        }
+        h1 {
+            font-size: 130px;
+            color: #fff;
+            font-family: serif;
+        }
+        h2 {
+            font-size: 50px;
+            color: #fff;
+            font-family: serif;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .image-container img {
+            width: 600px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .explain {
+            font-size: 30px;
+            color:#ccc;
+            font-family: serif;
+            text-align: center;
+
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0; 
+            }
+            100% {
+                opacity: 1; 
+            }
+        }
+        .hint-box {
+            width: 300px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        /* ヒント一覧のコンテナ */
+        .hint-list {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease; /* ゆっくり表示・非表示 */
+        }
+
+        /* ヒントの詳細 */
+        .hint-detail {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease;
+            padding-left: 20px;
+        }
+
+        /* ヒントを表示するときのクラス */
+        .show {
+            max-height: 500px; /* 十分大きくしておくことで中身が表示される */
+        }
+
+        .hint-title {
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .hint-detail-content {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CLuec</h1>
+    <h2>電通大謎解き制作団体“CLuec”ついに始動_____.</h2>
+    <br>
+    <div class="explain">
+        <p>
+        CLuecは、電通大(非公認)謎解きサークルです。<br>
+        謎解きを考案し、謎解きに関する公演を行うことを目的としています。
+        </p>
+    </div>
+    <br>
+    <div class="image-container"> 
+        <img src="93355777f2c7fa35.jpeg" alt="画像1">
+    </div>
+</body>
+</html>
+
